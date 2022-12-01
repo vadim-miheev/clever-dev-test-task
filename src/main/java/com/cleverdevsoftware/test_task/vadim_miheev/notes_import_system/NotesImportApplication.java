@@ -1,4 +1,4 @@
-package com.cleverdevsoftware.vadim_miheev_test_task;
+package com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

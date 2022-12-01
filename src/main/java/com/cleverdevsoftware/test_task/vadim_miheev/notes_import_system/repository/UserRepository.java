@@ -1,6 +1,6 @@
-package com.cleverdevsoftware.vadim_miheev_test_task.repository;
+package com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.repository;
 
-import com.cleverdevsoftware.vadim_miheev_test_task.model.User;
+import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

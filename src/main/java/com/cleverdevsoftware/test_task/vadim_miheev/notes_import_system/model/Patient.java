@@ -1,4 +1,4 @@
-package com.cleverdevsoftware.vadim_miheev_test_task.model;
+package com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
