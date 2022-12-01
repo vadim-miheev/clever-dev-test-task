@@ -20,3 +20,9 @@ spring:
         format_sql: true
         default_batch_fetch_size: 20
         jdbc.batch_size: 20 # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
+
+logging:
+  level:
+    #root: DEBUG
+    root: WARN
+    com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system: DEBUG
