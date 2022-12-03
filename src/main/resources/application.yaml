@@ -1,3 +1,6 @@
+app:
+  old-system-url: "http://localhost:8080"
+
 server:
   port: 8088
 
@@ -23,6 +26,5 @@ spring:
 
 logging:
   level:
-    #root: DEBUG
     root: WARN
-    com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system: DEBUG
+    com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system: WARN
