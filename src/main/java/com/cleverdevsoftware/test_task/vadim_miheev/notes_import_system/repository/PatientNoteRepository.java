@@ -1,14 +1,13 @@
 package com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.repository;
 
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.Patient;
+import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.PatientNote;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Set;
+import java.util.List;
 
 @Repository
-public interface PatientRepository extends JpaRepository<Patient, Long> {
-    @Query("SELECT p FROM Patient p WHERE p.statusId IN (200, 210, 230)")
-    Set<Patient> getAllActive();
+public interface PatientNoteRepository extends JpaRepository<PatientNote, Long> {
+    List<PatientNote> getPatientNotesByPatient(Patient patient);
 }

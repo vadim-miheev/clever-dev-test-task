@@ -4,6 +4,9 @@ import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.Us
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> getUserByLogin(String login);
 }
