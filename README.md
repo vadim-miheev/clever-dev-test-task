@@ -34,11 +34,14 @@ spring:
 
 
 ## Run
-To start the main import system execute in root directory:
+### Main import system
+Execute in root directory:
 ```shell
 mvn spring-boot:run
 ```
-To run imitation of REST API of the old system execute in root directory (port 8080 must be free):
+### REST API imitation of the old system
+Execute in root directory (port 8080 must be free):
 ```shell
 mvn spring-boot:run -f old-system-mock/pom.xml
 ```
+You can modify mock data in the file `old-system-mock/src/main/resources/static/generated-data.json`
