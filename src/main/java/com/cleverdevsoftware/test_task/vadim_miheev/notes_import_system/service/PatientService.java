@@ -42,7 +42,7 @@ public class PatientService {
 
     @Transactional
     public void updatePatientNotes(Patient patient, List<PatientNoteTo> patientNoteTos, ImportStatistics statistics) {
-        patient.setPatientNotes(patientNoteRepository.getPatientNotesByPatient(patient));
+        patient = patientRepository.getWithNotes(patient.getId()).orElseThrow();
         if(updateNecessaryPatientNotes(patient, patientNoteTos, statistics)){
             patientRepository.saveAndFlush(patient);
         }
