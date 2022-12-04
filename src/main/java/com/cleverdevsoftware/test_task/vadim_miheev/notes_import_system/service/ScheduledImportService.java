@@ -5,7 +5,6 @@ import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.dto.Pati
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.ImportStatistics;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +26,7 @@ public class ScheduledImportService {
 
     private WebClient webClient;
     private PatientService patientService;
+    private ObjectMapper objectMapper;
 
     @Scheduled(cron = "0 15 */2 * * ?")
     public void start() {
@@ -64,9 +64,6 @@ public class ScheduledImportService {
     }
 
     private Mono<List<PatientNoteTo>> getPatientNotesMono(PatientTo patient) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-
         @Getter
         @AllArgsConstructor
         class NotesRequestBody {
