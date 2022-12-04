@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -33,19 +34,24 @@ public class ScheduledImportService {
 
         ImportStatistics statistics = new ImportStatistics();
 
-        List<PatientTo> patientsFromOldSystem = Objects.requireNonNull(getPatientsMono().block());
+        try {
+            List<PatientTo> patientsFromOldSystem = Objects.requireNonNull(getPatientsMono().block());
 
-        patientService.getMapWithPatientsForImport(patientsFromOldSystem).forEach(
-                (patient, mappedPatientsFromOldSystem) -> mappedPatientsFromOldSystem.forEach(
-                        patientFromOldSystem -> patientService.updatePatientNotes(patient,
-                                getPatientNotesMono(patientFromOldSystem).block(), statistics)
-                )
-        );
+            patientService.getMapWithPatientsForImport(patientsFromOldSystem).forEach(
+                    (patient, mappedPatientsFromOldSystem) -> mappedPatientsFromOldSystem.forEach(
+                            patientFromOldSystem -> patientService.updatePatientNotes(patient,
+                                    getPatientNotesMono(patientFromOldSystem).block(), statistics)
+                    )
+            );
 
-        log.info("Import finished");
-        log.info("Notes was created: {}; Notes was updated: {}; Users was created: {}; Datetime duplicate errors: {}",
-                statistics.notesWasCreated.get(), statistics.notesWasUpdated.get(), statistics.usersWasCreated.get(), statistics.datetimeDuplicatesErrors.get());
+            log.info("Import finished");
+            log.info("Notes was created: {}; Notes was updated: {}; Users was created: {}; Datetime duplicate errors: {}",
+                    statistics.notesWasCreated.get(), statistics.notesWasUpdated.get(),
+                    statistics.usersWasCreated.get(), statistics.datetimeDuplicatesErrors.get());
 
+        } catch (WebClientRequestException e) {
+            log.error("Request to {} failed. Reason: {}", e.getUri(), e.getMessage());
+        }
     }
 
     private Mono<List<PatientTo>> getPatientsMono() {
