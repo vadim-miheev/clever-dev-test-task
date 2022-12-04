@@ -6,7 +6,6 @@ import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.Im
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.Patient;
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.PatientNote;
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.User;
-import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.repository.PatientNoteRepository;
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.repository.PatientRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PatientService {
     private PatientRepository patientRepository;
-    private PatientNoteRepository patientNoteRepository;
     private UserService userService;
 
     public Map<Patient, List<PatientTo>> getMapWithPatientsForImport(List<PatientTo> patientTos) {
@@ -64,11 +62,7 @@ public class PatientService {
                 if (note.getLastModified().isBefore(oldSystemNote.getModifiedDateTime())) {
                     note.setNote(oldSystemNote.getComments());
                     note.setLastModified(oldSystemNote.getModifiedDateTime());
-
-                    if (!note.getLastModifiedBy().getLogin().equals(oldSystemNote.getLoggedUser())) {
-                        User user = userService.getOrCreateByLogin(oldSystemNote.getLoggedUser(), statistics);
-                        note.setLastModifiedBy(user);
-                    }
+                    note.setLastModifiedBy(userService.getOrCreateByLogin(oldSystemNote.getLoggedUser(), statistics));
 
                     statistics.notesWasUpdated.incrementAndGet();
                     notesHaveBeenModified.set(true);
