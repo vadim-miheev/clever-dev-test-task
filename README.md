@@ -29,7 +29,7 @@ spring:
     password: "password"
   sql:
     init:
-      mode: never # can be changed to always if using an empty database
+      mode: never # can be changed to "always" if you want to initialize an empty database automatically
 ```
 
 
