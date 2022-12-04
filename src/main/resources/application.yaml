@@ -11,10 +11,10 @@ spring:
     password: "password"
   sql:
     init:
-      mode: always
+      mode: never
       continue-on-error: true
   jpa:
-    show-sql: true
+    show-sql: false
     open-in-view: false
     hibernate:
       ddl-auto: none
@@ -27,4 +27,4 @@ spring:
 logging:
   level:
     root: WARN
-    com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system: WARN
+    com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system: INFO
