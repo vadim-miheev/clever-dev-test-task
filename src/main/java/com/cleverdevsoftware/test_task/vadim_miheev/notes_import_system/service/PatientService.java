@@ -67,7 +67,6 @@ public class PatientService {
 
                     if (!note.getLastModifiedBy().getLogin().equals(oldSystemNote.getLoggedUser())) {
                         User user = userService.getOrCreateByLogin(oldSystemNote.getLoggedUser(), statistics);
-                        if(user.getId() == null) statistics.usersWasCreated.incrementAndGet();
                         note.setLastModifiedBy(user);
                     }
 
@@ -80,7 +79,6 @@ public class PatientService {
             } else {
 
                 User user = userService.getOrCreateByLogin(oldSystemNote.getLoggedUser(), statistics);
-                if(user.getId() == null) statistics.usersWasCreated.incrementAndGet();
 
                 patient.getPatientNotes().add(new PatientNote(
                         null,
