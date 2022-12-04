@@ -2,6 +2,7 @@ package com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.service
 
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.dto.PatientNoteTo;
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.dto.PatientTo;
+import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.ImportStatistics;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -11,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -31,13 +31,20 @@ public class ScheduledImportService {
     public void start() {
         log.info("Import started");
 
+        ImportStatistics statistics = new ImportStatistics();
+
         List<PatientTo> patientsFromOldSystem = Objects.requireNonNull(getPatientsMono().block());
 
         patientService.getMapWithPatientsForImport(patientsFromOldSystem).forEach(
                 (patient, mappedPatientsFromOldSystem) -> mappedPatientsFromOldSystem.forEach(
-                        patientFromOldSystem -> patientService.updatePatientNotes(patient, getPatientNotesMono(patientFromOldSystem).block())
+                        patientFromOldSystem -> patientService.updatePatientNotes(patient,
+                                getPatientNotesMono(patientFromOldSystem).block(), statistics)
                 )
         );
+
+        log.info("Import finished");
+        log.info("Notes was created: {}; Notes was updated: {}; Users was created: {}; Datetime duplicate errors: {}",
+                statistics.notesWasCreated.get(), statistics.notesWasUpdated.get(), statistics.usersWasCreated.get(), statistics.datetimeDuplicatesErrors.get());
 
     }
 
