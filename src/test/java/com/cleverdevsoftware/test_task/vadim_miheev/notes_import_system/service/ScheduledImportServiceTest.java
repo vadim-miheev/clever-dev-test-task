@@ -70,13 +70,14 @@ class ScheduledImportServiceTest {
                 .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/clients/case1.json")))
                 .addHeader("Content-Type", "application/json"));
 
-        Resource patientNotesResource = new ClassPathResource("/test_data/import_system/notes/case1.json");
         mockBackEnd.enqueue(new MockResponse()
-                .setBody(resourceAsString(patientNotesResource))
+                .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/notes/case1.json")))
                 .addHeader("Content-Type", "application/json"));
 
+        // Import
         scheduledImportService.start();
 
+        // Check results
         Patient patient = patientRepository.getWithNotes(16L).orElseThrow();
 
         assert patient.getPatientNotes().size() == 3;
