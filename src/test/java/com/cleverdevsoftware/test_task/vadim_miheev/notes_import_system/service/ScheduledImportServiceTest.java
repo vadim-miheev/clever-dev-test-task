@@ -35,16 +35,22 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @SpringBootTest
 @Slf4j
 class ScheduledImportServiceTest {
-    public static MockWebServer mockBackEnd;
+    private static MockWebServer mockBackEnd;
+
+    @Autowired
+    private ScheduledImportService scheduledImportService;
+
+    @Autowired
+    private PatientRepository patientRepository;
 
     @BeforeAll
-    static void setUp() throws IOException {
+    public static void setUp() throws IOException {
         mockBackEnd = new MockWebServer();
         mockBackEnd.start();
     }
 
     @AfterAll
-    static void tearDown() throws IOException {
+    public static void tearDown() throws IOException {
         mockBackEnd.shutdown();
     }
 
@@ -56,12 +62,6 @@ class ScheduledImportServiceTest {
             return WebClient.create(String.format("http://localhost:%s", mockBackEnd.getPort()));
         }
     }
-
-    @Autowired
-    ScheduledImportService scheduledImportService;
-
-    @Autowired
-    PatientRepository patientRepository;
 
     /*** create 3 new notes for 1 user */
     @Test
@@ -87,7 +87,7 @@ class ScheduledImportServiceTest {
 
     @Test
     @Transactional
-    @Sql({"/clean-up.sql", "/schema.sql" ,"/test_data/import_system/default-state.sql"})
+    @Sql({"/clean-up.sql", "/schema.sql" , "/test_data/import_system/initial-state.sql"})
     void case2_notesTextUpdating() {
         // Mock old system responses
         addNextMockResponseBodyFromJsonFile("/test_data/import_system/clients/case2.json");
@@ -112,7 +112,7 @@ class ScheduledImportServiceTest {
 
     @Test
     @Transactional()
-    @Sql({"/clean-up.sql", "/schema.sql", "/test_data/import_system/default-state.sql"})
+    @Sql({"/clean-up.sql", "/schema.sql", "/test_data/import_system/initial-state.sql"})
     void case3_notesTextAndUserUpdating() {
         // Mock old system responses
         addNextMockResponseBodyFromJsonFile("/test_data/import_system/clients/case3.json");
