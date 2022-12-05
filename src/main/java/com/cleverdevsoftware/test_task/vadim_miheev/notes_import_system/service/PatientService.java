@@ -62,7 +62,9 @@ public class PatientService {
                 if (note.getLastModified().isBefore(oldSystemNote.getModifiedDateTime())) {
                     note.setNote(oldSystemNote.getComments());
                     note.setLastModified(oldSystemNote.getModifiedDateTime());
-                    note.setLastModifiedBy(userService.getOrCreateByLogin(oldSystemNote.getLoggedUser(), statistics));
+                    if (!note.getLastModifiedBy().getLogin().equals(oldSystemNote.getLoggedUser())) {
+                        note.setLastModifiedBy(userService.getOrCreateByLogin(oldSystemNote.getLoggedUser(), statistics));
+                    }
 
                     statistics.notesWasUpdated.incrementAndGet();
                     notesHaveBeenModified.set(true);
