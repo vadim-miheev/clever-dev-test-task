@@ -1,7 +1,7 @@
 package com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.service;
 
-import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.PatientNoteTestData;
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.Patient;
+import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.PatientNote;
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.repository.PatientRepository;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.mockwebserver.MockResponse;
@@ -26,7 +26,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.time.LocalDateTime;
+import java.util.List;
 
+import static com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.service.PatientNoteTestData.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @SpringBootTest
@@ -60,11 +63,11 @@ class ScheduledImportServiceTest {
     @Autowired
     PatientRepository patientRepository;
 
-    /*** create 3 new notes */
+    /*** create 3 new notes for 1 user */
     @Test
     @Transactional
     @Sql({"/clean-up.sql", "/schema.sql" ,"/data.sql"})
-    void case1() {
+    void case1_notesCreating() {
         // Mock old system responses
         mockBackEnd.enqueue(new MockResponse()
                 .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/clients/case1.json")))
@@ -78,13 +81,43 @@ class ScheduledImportServiceTest {
         scheduledImportService.start();
 
         // Check results
-        Patient patient = patientRepository.getWithNotes(16L).orElseThrow();
+        Patient patient = patientRepository.getWithNotes(CASE_1_USER_ID).orElseThrow();
 
         assert patient.getPatientNotes().size() == 3;
 
         Assertions.assertThat(patient.getPatientNotes()).usingRecursiveComparison()
                 .ignoringFields("id", "patient", "createdBy.id", "lastModifiedBy.id")
-                .isEqualTo(PatientNoteTestData.CASE_1_NOTES);
+                .isEqualTo(CASE_1_NOTES);
+    }
+
+    @Test
+    @Transactional
+    @Sql({"/clean-up.sql", "/schema.sql" ,"/test_data/import_system/default-state.sql"})
+    void case2_notesTextUpdating() {
+        // Mock old system responses
+        mockBackEnd.enqueue(new MockResponse()
+                .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/clients/case2.json")))
+                .addHeader("Content-Type", "application/json"));
+
+        mockBackEnd.enqueue(new MockResponse()
+                .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/notes/case2.json")))
+                .addHeader("Content-Type", "application/json"));
+
+        // Import
+        scheduledImportService.start();
+
+        // Check results
+        Patient patient = patientRepository.getWithNotes(CASE_2_USER_ID).orElseThrow();
+
+        assert patient.getPatientNotes().size() == 4;
+
+        List<PatientNote> referenceData = getDefaultDataForUser20();
+        referenceData.get(1).setNote("Text after update");
+        referenceData.get(1).setLastModified(LocalDateTime.of(2022, 9 ,18, 4, 57, 6));
+
+        Assertions.assertThat(patient.getPatientNotes()).usingRecursiveComparison()
+                .ignoringFields("id", "patient", "createdBy.id", "lastModifiedBy.id")
+                .isEqualTo(referenceData);
     }
 
     private static String resourceAsString(Resource resource) {

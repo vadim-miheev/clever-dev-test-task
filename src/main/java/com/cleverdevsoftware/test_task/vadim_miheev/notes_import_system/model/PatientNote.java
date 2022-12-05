@@ -26,11 +26,11 @@ public class PatientNote {
     @Column(name = "last_modified_date_time")
     private LocalDateTime lastModified;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "created_by_user_id")
     private User createdBy;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "last_modified_by_user_id")
     private User lastModifiedBy;
 
