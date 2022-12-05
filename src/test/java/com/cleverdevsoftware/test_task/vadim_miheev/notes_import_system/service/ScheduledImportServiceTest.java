@@ -66,7 +66,7 @@ class ScheduledImportServiceTest {
     /*** create 3 new notes for 1 user */
     @Test
     @Transactional
-    @Sql({"/clean-up.sql", "/schema.sql" ,"/data.sql"})
+    @Sql({"/clean-up.sql", "/schema.sql", "/test_data/import_system/initial-state.sql"})
     void case1_notesCreating() {
         // Mock old system responses
         addNextMockResponseBodyFromJsonFile("/test_data/import_system/clients/case1.json");
@@ -87,7 +87,7 @@ class ScheduledImportServiceTest {
 
     @Test
     @Transactional
-    @Sql({"/clean-up.sql", "/schema.sql" , "/test_data/import_system/initial-state.sql"})
+    @Sql({"/clean-up.sql", "/schema.sql", "/test_data/import_system/initial-state.sql"})
     void case2_notesTextUpdating() {
         // Mock old system responses
         addNextMockResponseBodyFromJsonFile("/test_data/import_system/clients/case2.json");
@@ -101,7 +101,7 @@ class ScheduledImportServiceTest {
 
         assert patient.getPatientNotes().size() == 4;
 
-        List<PatientNote> referenceData = getDefaultDataForUser20();
+        List<PatientNote> referenceData = getInitialTestDataForUser3();
         referenceData.get(1).setNote("Text after update");
         referenceData.get(1).setLastModified(LocalDateTime.of(2022, 9 ,18, 4, 57, 6));
 
@@ -126,7 +126,7 @@ class ScheduledImportServiceTest {
 
         assert patient.getPatientNotes().size() == 4;
 
-        List<PatientNote> referenceData = getDefaultDataForUser20();
+        List<PatientNote> referenceData = getInitialTestDataForUser3();
         referenceData.get(2).setNote("New text");
         referenceData.get(2).setLastModified(LocalDateTime.of(2022, 3 ,5, 2, 53, 20));
         referenceData.get(2).setLastModifiedBy(new User(null, "new.user.test"));

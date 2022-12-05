@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class PatientNoteTestData {
-    public static final Long CASE_1_USER_ID = 16L;
+    public static final Long CASE_1_USER_ID = 7L;
     public static final Long CASE_2_USER_ID = 3L;
     public static final Long CASE_3_USER_ID = 3L;
     public static final  List<PatientNote> CASE_1_NOTES = List.of(
@@ -15,8 +15,8 @@ public class PatientNoteTestData {
                     null,
                     LocalDateTime.of(2019, 8, 4, 4, 20, 14),
                     LocalDateTime.of(2019, 8, 4, 4, 24, 14),
-                    new User(null, "p.smith"),
-                    new User(null, "p.smith"),
+                    new User(null, "j.smith"),
+                    new User(null, "j.smith"),
                     "Labore deserunt ad reprehenderit id ullamco. Excepteur quis pariatur sit ullamco ipsum irure ex culpa do occaecat. Eu magna Lorem nisi eiusmod dolore ipsum duis laboris excepteur reprehenderit.\r\n",
                     null),
             new PatientNote(
@@ -37,7 +37,7 @@ public class PatientNoteTestData {
                     null)
     );
 
-    public static List<PatientNote> getDefaultDataForUser20() {
+    public static List<PatientNote> getInitialTestDataForUser3() {
         return List.of(
                 new PatientNote(
                         null,

@@ -4,7 +4,7 @@ INSERT INTO public.patient_profile (first_name, last_name, old_client_guid, stat
 INSERT INTO public.patient_profile (first_name, last_name, old_client_guid, status_id) VALUES ('Lara', 'Baker', 'e0874057-09bb-4fcc-b30e-d3d6ab310dc1', 230);
 INSERT INTO public.patient_profile (first_name, last_name, old_client_guid, status_id) VALUES ('Sanchez', 'Ray', 'bf233552-003c-49e1-a16a-d7f3175f24b3', 500);
 INSERT INTO public.patient_profile (first_name, last_name, old_client_guid, status_id) VALUES ('Fry', 'Kline', 'b55c72c5-f86b-44b6-863e-d25cccd1beb5,7b62f3d5-37f1-4553-8079-ae0b19925977', 300);
-INSERT INTO public.patient_profile (first_name, last_name, old_client_guid, status_id) VALUES ('Gardner', 'Mcdonald', '5b18534f-088e-4854-ad9a-611a53f6f428,7d174f81-4613-49b7-b8bd-cba036319fe4,13f447f6-f0f7-456e-bb18-ed69c0f59543', 500);
+INSERT INTO public.patient_profile (first_name, last_name, old_client_guid, status_id) VALUES ('Gardner', 'Mcdonald', '5b18534f-088e-4854-ad9a-611a53f6f428,7d174f81-4613-49b7-b8bd-cba036319fe4,13f447f6-f0f7-456e-bb18-ed69c0f59543', 200);
 INSERT INTO public.patient_profile (first_name, last_name, old_client_guid, status_id) VALUES ('Nichols', 'Daugherty', '2bea65f6-4455-4c92-b345-68e92235dff1,9e6c7433-2fb1-4dd2-a9cd-95052315a9f6', 500);
 INSERT INTO public.patient_profile (first_name, last_name, old_client_guid, status_id) VALUES ('Darcy', 'Figueroa', 'f89c3381-c2bc-4552-8fe2-c4fafd8be595,e3ffd945-96ad-4d08-a8e9-91d9e6d90065', 210);
 INSERT INTO public.patient_profile (first_name, last_name, old_client_guid, status_id) VALUES ('Pickett', 'Lindsay', '034d08eb-a08a-4c14-8a3e-b69ea2eb22c9,afc0959b-3e12-4820-8cca-9fa97c6da3f4', 500);
