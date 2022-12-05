@@ -63,7 +63,7 @@ public class PatientService {
                     note.setNote(oldSystemNote.getComments());
                     note.setLastModified(oldSystemNote.getModifiedDateTime());
                     if (!note.getLastModifiedBy().getLogin().equals(oldSystemNote.getLoggedUser())) {
-                        note.setLastModifiedBy(userService.getOrCreateByLogin(oldSystemNote.getLoggedUser(), statistics));
+                        note.setLastModifiedBy(userService.getOrCreateByLoginAndUpdateStatistics(oldSystemNote.getLoggedUser(), statistics));
                     }
 
                     statistics.notesWasUpdated.incrementAndGet();
@@ -74,7 +74,7 @@ public class PatientService {
                         String.join(", ", matchedNotes.stream().map(PatientNote::getId).map(String::valueOf).toList())));
             } else {
 
-                User user = userService.getOrCreateByLogin(oldSystemNote.getLoggedUser(), statistics);
+                User user = userService.getOrCreateByLoginAndUpdateStatistics(oldSystemNote.getLoggedUser(), statistics);
 
                 patient.getPatientNotes().add(new PatientNote(
                         null,

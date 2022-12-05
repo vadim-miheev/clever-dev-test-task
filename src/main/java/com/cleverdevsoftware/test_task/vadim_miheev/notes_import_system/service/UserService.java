@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private UserRepository userRepository;
 
-    public User getOrCreateByLogin(String login, ImportStatistics statistics) {
+    public User getOrCreateByLoginAndUpdateStatistics(String login, ImportStatistics statistics) {
         User user = userRepository.getUserByLogin(login).orElse(new User(null, login));
         if (user.getId() == null) {
             user = userRepository.save(user);
