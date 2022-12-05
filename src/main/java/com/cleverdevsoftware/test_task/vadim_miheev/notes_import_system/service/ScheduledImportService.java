@@ -35,6 +35,7 @@ public class ScheduledImportService {
         ImportStatistics statistics = new ImportStatistics();
 
         try {
+            // Synchronous calls are used to simplify the implementation of statistics logging.
             List<PatientTo> patientsFromOldSystem = Objects.requireNonNull(getPatientsMono().block());
 
             patientService.getMapWithPatientsForImport(patientsFromOldSystem).forEach(
