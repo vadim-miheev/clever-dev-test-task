@@ -2,6 +2,7 @@ package com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.service
 
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.Patient;
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.PatientNote;
+import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.model.User;
 import com.cleverdevsoftware.test_task.vadim_miheev.notes_import_system.repository.PatientRepository;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.mockwebserver.MockResponse;
@@ -114,6 +115,37 @@ class ScheduledImportServiceTest {
         List<PatientNote> referenceData = getDefaultDataForUser20();
         referenceData.get(1).setNote("Text after update");
         referenceData.get(1).setLastModified(LocalDateTime.of(2022, 9 ,18, 4, 57, 6));
+
+        Assertions.assertThat(patient.getPatientNotes()).usingRecursiveComparison()
+                .ignoringFields("id", "patient", "createdBy.id", "lastModifiedBy.id")
+                .isEqualTo(referenceData);
+    }
+
+    @Test
+    @Transactional()
+    @Sql({"/clean-up.sql", "/schema.sql", "/test_data/import_system/default-state.sql"})
+    void case3_notesTextAndUserUpdating() {
+        // Mock old system responses
+        mockBackEnd.enqueue(new MockResponse()
+                .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/clients/case3.json")))
+                .addHeader("Content-Type", "application/json"));
+
+        mockBackEnd.enqueue(new MockResponse()
+                .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/notes/case3.json")))
+                .addHeader("Content-Type", "application/json"));
+
+        // Import
+        scheduledImportService.start();
+
+        // Check results
+        Patient patient = patientRepository.getWithNotes(CASE_3_USER_ID).orElseThrow();
+
+        assert patient.getPatientNotes().size() == 4;
+
+        List<PatientNote> referenceData = getDefaultDataForUser20();
+        referenceData.get(2).setNote("New text");
+        referenceData.get(2).setLastModified(LocalDateTime.of(2022, 3 ,5, 2, 53, 20));
+        referenceData.get(2).setLastModifiedBy(new User(null, "new.user.test"));
 
         Assertions.assertThat(patient.getPatientNotes()).usingRecursiveComparison()
                 .ignoringFields("id", "patient", "createdBy.id", "lastModifiedBy.id")

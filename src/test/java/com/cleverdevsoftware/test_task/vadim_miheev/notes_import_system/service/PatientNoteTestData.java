@@ -8,7 +8,8 @@ import java.util.List;
 
 public class PatientNoteTestData {
     public static final Long CASE_1_USER_ID = 16L;
-    public static final Long CASE_2_USER_ID = 20L;
+    public static final Long CASE_2_USER_ID = 3L;
+    public static final Long CASE_3_USER_ID = 3L;
     public static final  List<PatientNote> CASE_1_NOTES = List.of(
             new PatientNote(
                     null,
