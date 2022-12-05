@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
@@ -70,13 +69,8 @@ class ScheduledImportServiceTest {
     @Sql({"/clean-up.sql", "/schema.sql" ,"/data.sql"})
     void case1_notesCreating() {
         // Mock old system responses
-        mockBackEnd.enqueue(new MockResponse()
-                .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/clients/case1.json")))
-                .addHeader("Content-Type", "application/json"));
-
-        mockBackEnd.enqueue(new MockResponse()
-                .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/notes/case1.json")))
-                .addHeader("Content-Type", "application/json"));
+        addNextMockResponseBodyFromJsonFile("/test_data/import_system/clients/case1.json");
+        addNextMockResponseBodyFromJsonFile("/test_data/import_system/notes/case1.json");
 
         // Import
         scheduledImportService.start();
@@ -96,13 +90,8 @@ class ScheduledImportServiceTest {
     @Sql({"/clean-up.sql", "/schema.sql" ,"/test_data/import_system/default-state.sql"})
     void case2_notesTextUpdating() {
         // Mock old system responses
-        mockBackEnd.enqueue(new MockResponse()
-                .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/clients/case2.json")))
-                .addHeader("Content-Type", "application/json"));
-
-        mockBackEnd.enqueue(new MockResponse()
-                .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/notes/case2.json")))
-                .addHeader("Content-Type", "application/json"));
+        addNextMockResponseBodyFromJsonFile("/test_data/import_system/clients/case2.json");
+        addNextMockResponseBodyFromJsonFile("/test_data/import_system/notes/case2.json");
 
         // Import
         scheduledImportService.start();
@@ -126,13 +115,8 @@ class ScheduledImportServiceTest {
     @Sql({"/clean-up.sql", "/schema.sql", "/test_data/import_system/default-state.sql"})
     void case3_notesTextAndUserUpdating() {
         // Mock old system responses
-        mockBackEnd.enqueue(new MockResponse()
-                .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/clients/case3.json")))
-                .addHeader("Content-Type", "application/json"));
-
-        mockBackEnd.enqueue(new MockResponse()
-                .setBody(resourceAsString(new ClassPathResource("/test_data/import_system/notes/case3.json")))
-                .addHeader("Content-Type", "application/json"));
+        addNextMockResponseBodyFromJsonFile("/test_data/import_system/clients/case3.json");
+        addNextMockResponseBodyFromJsonFile("/test_data/import_system/notes/case3.json");
 
         // Import
         scheduledImportService.start();
@@ -152,9 +136,11 @@ class ScheduledImportServiceTest {
                 .isEqualTo(referenceData);
     }
 
-    private static String resourceAsString(Resource resource) {
-        try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
-            return FileCopyUtils.copyToString(reader);
+    private void addNextMockResponseBodyFromJsonFile(String path) {
+        try (Reader reader = new InputStreamReader(new ClassPathResource(path).getInputStream(), UTF_8)) {
+            mockBackEnd.enqueue(new MockResponse()
+                    .setBody(FileCopyUtils.copyToString(reader))
+                    .addHeader("Content-Type", "application/json"));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
